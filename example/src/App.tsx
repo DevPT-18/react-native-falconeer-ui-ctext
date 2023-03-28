@@ -1,31 +1,31 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-falconeer-ui-ctext';
+import { StyleSheet, View } from 'react-native';
+import CText from 'react-native-falconeer-ui-ctext';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
 
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+ 
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <CText numberOfLines={1} readMoreText={"Show More"} readLessText={"Show Less"} readMoreStyle={{color: "red", marginStart:30}} readLessStyle={{color: "green",fontStyle:"italic"}} >
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
+      when an unknown printer took a galley of type and scrambled it to make a type specimen book</CText>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    marginStart:10,
+    marginEnd:10,
+    marginVertical: 30
   },
   box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
+    marginEnd:30,
+    marginVertical: 30,
   },
 });
