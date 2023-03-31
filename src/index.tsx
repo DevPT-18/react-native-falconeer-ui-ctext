@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { type TextLayoutLine, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import type { CTextProps } from './interfaces/CTextprops'
-import { isAndroid, isiOS } from './utils/platform'
-import Tooltip from './Tooltip'
+import { isAndroid, isiOS } from './platform'
+import { Tooltip } from './Tooltip'
 
 interface TextProperties {
   length: number
@@ -15,7 +15,7 @@ export default function CText ({
   children,
   ...props
 }: CTextProps) {
-  const [isVisible, toggle] = React.useReducer((state) => !state, false)
+
   const [text, setText] = useState<TextProperties>({
     length: 0,
     isTruncatedText: false
@@ -33,27 +33,22 @@ export default function CText ({
     setText({ length: children.length, isTruncatedText: false })
   }
 
-  const renderContent = React.useCallback(() => {
-    return (
-      <TouchableOpacity style={styles.tooltipContainer} onPress={toggle}>
-        <Text style={styles.tooltipText} >
-          {children}
-        </Text>
-      </TouchableOpacity>
-    )
-  }, [])
+
 
   return (
       <View style={styles.container}>
-      <Tooltip
-        position="bottom"
-        renderContent={renderContent}
-        isVisible={isVisible}
-        onDismiss={toggle}
-        pointerStyle={styles.pointer}
-        pointerColor="green">
-        <TouchableOpacity onPress={toggle} style={styles.newFeature}>
-        {isiOS && (
+    
+  <Tooltip
+        offset={10}
+        trigger={
+          <TouchableOpacity
+            style={{
+              paddingHorizontal: 10,
+              paddingVertical: 4,
+              backgroundColor: '#e3e3e3'
+            }}
+          >
+           {isiOS && (
         <Text
           style={{ height: 0 }}
           onTextLayout={({ nativeEvent: { lines } }) => {
@@ -84,7 +79,14 @@ export default function CText ({
           ? `${children.slice(0, text.length - 10).trim()}...`
           : children}
       </Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        }
+      >
+        <Tooltip.Content>
+          <View style={styles.tooltip}>
+            <Text style={styles.tooltipText}>{children}</Text>
+          </View>
+        </Tooltip.Content>
       </Tooltip>
     </View>
   )
@@ -100,6 +102,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  }, 
+   tooltip: {
+    justifyContent:'center',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    backgroundColor: '#616161e6',
+    borderRadius: 4
   },
   newFeatureText: {
     flex: 1,

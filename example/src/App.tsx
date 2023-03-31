@@ -1,16 +1,16 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import CText from 'react-native-falconeer-ui-ctext'
-import { PortalProvider } from '@gorhom/portal'
+import { OverlayProvider } from '@react-native-aria/overlays'
 
 export default function App() {
   return (
-    <PortalProvider>
+    <OverlayProvider>
     <View style ={styles.container}>
       <CText numberOfLines={1} >
       The universe is all of space and time and their contents including planets, stars, galaxies, and all other forms of matter and energy.</CText>
     </View>
-    </PortalProvider>
+    </OverlayProvider>
   )
 }
 
