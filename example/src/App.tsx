@@ -1,31 +1,27 @@
-import * as React from 'react';
-
-import { StyleSheet, View } from 'react-native';
-import CText from 'react-native-falconeer-ui-ctext';
+import * as React from 'react'
+import { StyleSheet, View } from 'react-native'
+import CText from 'react-native-falconeer-ui-ctext'
+import { PortalProvider } from '@gorhom/portal'
 
 export default function App() {
-
- 
-
   return (
-    <View style={styles.container}>
-      <CText numberOfLines={1} readMoreText={"Show More"} readLessText={"Show Less"} readMoreStyle={{color: "red", marginStart:30}} readLessStyle={{color: "green",fontStyle:"italic"}} >
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-      when an unknown printer took a galley of type and scrambled it to make a type specimen book</CText>
+    <PortalProvider>
+    <View style ={styles.container}>
+      <CText numberOfLines={1} >
+      The universe is all of space and time and their contents including planets, stars, galaxies, and all other forms of matter and energy.</CText>
     </View>
-  );
+    </PortalProvider>
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
-    marginStart:10,
-    marginEnd:10,
-    marginVertical: 30
+    alignItems: 'center',
   },
   box: {
     marginEnd:30,
     marginVertical: 30,
   },
-});
+})
