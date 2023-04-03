@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { RefObject } from 'react'
 import { useOverlayPosition } from '@react-native-aria/overlays'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import type {
@@ -21,10 +21,10 @@ const resetBorderWidthStyles = {
 }
 
 type PopperContext = IPopoverProps & {
-  triggerRef: any;
-  onClose: any;
-  contentProps?: any;
-  setOverlayRef?: (overlayRef: any) => void;
+  triggerRef: RefObject<any>;
+  onClose: () => void;
+  contentProps?: Object;
+  setOverlayRef?: (overlayRef: RefObject<any>) => void;
 };
 
 const [PopperProvider, usePopperContext] = createContext<PopperContext>(
@@ -33,10 +33,10 @@ const [PopperProvider, usePopperContext] = createContext<PopperContext>(
 
 const Popper = (
   props: IPopoverProps & {
-    triggerRef: any;
-    onClose: any;
-    contentProps: any;
-    setOverlayRef?: (overlayRef: any) => void;
+    triggerRef: RefObject<any>;
+    onClose: () => void;
+    contentProps: Object;
+    setOverlayRef?: (overlayRef: RefObject<any>) => void;
   }
 ) => {
   return <PopperProvider {...props}>{props.children}</PopperProvider>
@@ -76,8 +76,6 @@ const PopperContent = ({ children, accessibilityLabel }: IPopoverContent) => {
     setOverlayRef && setOverlayRef(overlayRef)
   }, [overlayRef, setOverlayRef])
 
-  // Might have performance impact if there are a lot of siblings!
-  // Shouldn't be an issue with popovers since it would have atmost 2. Arrow and Content.
   React.Children.forEach(children, (child) => {
     if (
       React.isValidElement(child) &&
@@ -150,7 +148,6 @@ const PopperContent = ({ children, accessibilityLabel }: IPopoverContent) => {
   )
 }
 
-// This is an internal implementation of PopoverArrow
 const PopperArrow = ({
   height = defaultArrowHeight,
   width = defaultArrowWidth,
@@ -180,7 +177,6 @@ const PopperArrow = ({
     [triangleStyle, additionalStyles, arrowProps.style]
   )
 
-  // Passed a custom Arrow, don't apply triangle style
   if (rest.children) {
     return (
       <View style={[arrowStyles, resetBorderWidthStyles, rest.style]}>

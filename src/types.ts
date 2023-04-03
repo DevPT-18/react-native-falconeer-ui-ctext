@@ -68,7 +68,7 @@ export type IPopoverContentImpl = {
   arrowHeight: number;
   arrowWidth: number;
   placement?: string;
-  children: any;
+  children:  React.ReactNode;
 };
 
 export type IPopoverContent = {
@@ -92,8 +92,8 @@ export type IOverlayProps = {
   mode?: OverlayType;
   focusable?: boolean;
   isOpen: boolean;
-  children: any;
-  onClose: any;
+  children:  React.ReactNode;
+  onClose: () => void;
   isKeyboardDismissable?: boolean;
   shouldCloseOnOutsideClick?: boolean;
   autoFocus?: boolean;

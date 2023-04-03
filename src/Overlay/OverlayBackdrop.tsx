@@ -1,13 +1,14 @@
 import React from 'react'
-import { StyleSheet, Pressable, Platform, PressableProps } from 'react-native'
+import { StyleSheet, Pressable, PressableProps } from 'react-native'
 import { OverlayContext } from './context'
+import { isWeb } from 'src/utils'
 
 type IOverlayCloseButtonProps = PressableProps;
 
 const defaultStyles = StyleSheet.create({
   wrapper: {
     ...StyleSheet.absoluteFillObject,
-    ...(Platform.OS === 'web' ? { cursor: 'default' } : {}),
+    ...(isWeb() ? { cursor: 'default' } : {}),
   },
 })
 

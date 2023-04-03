@@ -6,8 +6,6 @@ import type { IPopoverProps } from '../types'
 import { OverlayBackdrop } from '../Overlay/OverlayBackdrop'
 import { Platform } from 'react-native'
 
-// Tooltip's code is almost same as Popover with some exceptions. Defaults to on="hover"
-// and focusable=false and also has different ARIA attributes via useTooltip hook.
 const Tooltip = (props: IPopoverProps) => {
   let triggerRef = React.useRef<any>(null)
 
@@ -45,12 +43,10 @@ const Tooltip = (props: IPopoverProps) => {
     ...triggerExistingProps,
   })
 
-  // Received a trigger ref
   if (isTriggerRef) {
     // @ts-ignore
     triggerRef = props.trigger
   }
-  // Received a trigger element
   else if (isTriggerElement) {
     // @ts-ignore - We already checked isValidElement above.
     triggerElem = React.cloneElement(props.trigger, {

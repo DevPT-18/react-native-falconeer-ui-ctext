@@ -1,8 +1,7 @@
 import React, { RefObject } from 'react'
-import { Animated, Platform } from 'react-native'
+import { Animated } from 'react-native'
 import { composeEventHandlers } from '../utils'
-
-const isPlatformWeb = Platform.OS === 'web'
+import { isWeb } from '../utils'
 
 let idCounter = 0
 
@@ -10,33 +9,6 @@ const generateId = (prefix: string) => {
   idCounter++
   return 'react-native-falconeer-cText-' + prefix + '-' + idCounter
 }
-
-// type IParams = {
-//   enabled?: boolean;
-//   onClose: () => void;
-// };
-
-// export const useKeyboardDismissable = ({ enabled, onClose }: IParams) => {
-//   React.useEffect(
-//     function closeOverlayOnEscapeEffectCallback() {
-//       let escapeKeyListener: any = null
-//       // if (Platform.OS === 'web') {
-//       //   escapeKeyListener = (e: KeyboardEvent) => {
-//       //     if (e.key=== 'Escape' && enabled) {
-//       //       onClose()
-//       //     }
-//       //   }
-//       //   document.addEventListener('keydown', escapeKeyListener)
-//       // }
-//       // return () => {
-//       //   if (Platform.OS === 'web') {
-//       //     document.removeEventListener('keydown', escapeKeyListener)
-//       //   }
-//       }
-//     },
-//     [enabled, onClose]
-//   )
-// }
 
 export const useElementByType = (children: React.ReactNode, name: string) => {
   let element
@@ -50,28 +22,12 @@ export const useElementByType = (children: React.ReactNode, name: string) => {
 }
 
 interface UseControllableStateProps<T> {
-  /**
-   * The value to used in controlled mode
-   */
   value?: T;
-  /**
-   * The initial value to be used, in uncontrolled mode
-   */
   defaultValue?: T | (() => T);
-  /**
-   * The callback fired when the value changes
-   */
   onChange?: (value: T) => void;
-  /**
-   * The component name (for warnings)
-   */
   name?: string;
 }
 
-/**
- * React hook for using controlling component state.
- * @param props
- */
 export function useControllableState<T>(props: UseControllableStateProps<T>) {
   const { value: valueProp, defaultValue, onChange } = props
 
@@ -94,59 +50,26 @@ export function useControllableState<T>(props: UseControllableStateProps<T>) {
   return [value, updateValue] as [T, React.Dispatch<React.SetStateAction<T>>]
 }
 
-export const usePopover = (props: {
-  isOpen: boolean;
-  disableAriaAttributes?: boolean;
-}) => {
-  const triggerId = React.useRef(generateId('trigger')).current
-  const contentId = React.useRef(generateId('content')).current
-
-  const { isOpen } = props
-
-  let triggerProps: any = {
-    nativeID: triggerId,
-    accessibilityRole: 'button',
-  }
-
-  let contentProps: any = {
-    nativeID: contentId,
-  }
-
-  triggerProps['aria-expanded'] = !!isOpen
-  triggerProps['aria-haspopup'] = true
-  triggerProps['aria-controls'] = isOpen ? contentId : undefined
-  contentProps.accessibilityRole = Platform.OS === 'web' ? 'dialog' : undefined
-
-  if (props.disableAriaAttributes) {
-    return { triggerProps: {}, contentProps: {} }
-  }
-
-  return {
-    triggerProps,
-    contentProps,
-  }
-}
-
 export const useTooltip = (props: {
   isOpen: boolean;
   disableAriaAttributes?: boolean;
 }) => {
-  const triggerId = React.useRef(generateId('trigger')).current
-  const contentId = React.useRef(generateId('content')).current
+  const triggerId  = React.useRef(generateId('trigger')).current
+  const contentId : String= React.useRef(generateId('content')).current
   const { isOpen } = props
 
-  let triggerProps: any = {
+  let triggerProps :any = {
     nativeID: triggerId,
     accessibilityRole: 'button',
   }
 
-  let contentProps: any = {
+  let contentProps : any= {
     nativeID: contentId,
   }
 
   triggerProps['aria-describedby'] = isOpen ? contentId : undefined
   contentProps.accessibilityRole =
-    Platform.OS === 'web' ? 'tooltip' : undefined
+    isWeb() ? 'tooltip' : undefined
 
   if (props.disableAriaAttributes) {
     return { triggerProps: {}, contentProps: {} }
@@ -168,14 +91,14 @@ type IOnProps = {
   onLongPress?: () => void;
   onOpen: () => void;
   onClose: () => void;
-  overlayRef?: any;
+  overlayRef?: RefObject<any>;
 };
 
 export const useOn = (props: IOnProps) => {
   let { on = 'press', onOpen } = props
 
   let events = useHoverInteraction(props, {
-    enabled: on === 'hover' && isPlatformWeb,
+    enabled: on === 'hover' && isWeb(),
   })
 
   if (events) {
@@ -206,8 +129,8 @@ const useHoverInteraction = (
   { enabled }: { enabled: boolean }
 ) => {
   const { overlayRef, onOpen, onClose } = props
-  const { isHovered: isOverlayHovered } = useHover(overlayRef, { enabled })
-  const { isFocused: isOverlayFocused } = useFocus(overlayRef, { enabled })
+  const { isHovered: isOverlayHovered } = useHover(overlayRef!, { enabled })
+  const { isFocused: isOverlayFocused } = useFocus(overlayRef!, { enabled })
   const [isTriggerHovered, setIsTriggerHovered] = React.useState(false)
   const [isTriggerFocused, setIsTriggerFocused] = React.useState(false)
 
@@ -268,7 +191,7 @@ const useHoverInteraction = (
 
 }
 
-const useHover = (targetRef: any, { enabled }: { enabled: boolean }) => {
+const useHover = (targetRef: RefObject<any>, { enabled }: { enabled: boolean }) => {
   const [isHovered, setIsHovered] = React.useState(false)
   React.useEffect(() => {
     if (!enabled) return
@@ -285,7 +208,7 @@ const useHover = (targetRef: any, { enabled }: { enabled: boolean }) => {
   return { isHovered }
 }
 
-const useFocus = (targetRef: any, { enabled }: { enabled: boolean }) => {
+const useFocus = (targetRef: RefObject<any>, { enabled }: { enabled: boolean }) => {
   const [isFocused, setIsFocused] = React.useState(false)
   React.useEffect(() => {
     if (!enabled) return
@@ -366,43 +289,4 @@ export const useAnimatedStyles = ({
     },
     isExited,
   }
-}
-
-type IOutsideClickListener = {
-  refs?: Array<RefObject<any> | undefined>;
-  onClose: any;
-  enabled?: boolean;
-};
-
-export const useCloseOnOutsideClick = ({
-  refs,
-  onClose,
-  enabled,
-}: IOutsideClickListener) => {
-  React.useEffect(() => {
-    if (!enabled) return
-
-    // let listener = (e: MouseEvent) => {
-    //   let clickedInRefs = false
-    //   if (refs) {
-    //     refs.forEach((ref) => {
-    //       if (ref && ref.current && ref.current.contains(e.target)) {
-    //         clickedInRefs = true
-    //       }
-    //     })
-    //   }
-
-    //   if (!clickedInRefs) onClose()
-    // }
-    // if (isPlatformWeb) {
-    //   // Register at capture phase as Touchable prevents event bubbling.
-    //   document.addEventListener('click', listener, true)
-    // }
-
-    return () => {
-      // if (isPlatformWeb) {
-      //   document.removeEventListener('click', listener, true)
-      // }
-    }
-  }, [refs, onClose, enabled])
 }

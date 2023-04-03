@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { type TextLayoutLine, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import type { CTextProps } from './interfaces/CTextprops'
-import { isAndroid, isiOS } from './platform'
-import { Tooltip } from './Tooltip'
+import { isAndroid, isiOS } from './utils'
+import { Tooltip } from './Tooltip/Tooltip'
 
 interface TextProperties {
   length: number
