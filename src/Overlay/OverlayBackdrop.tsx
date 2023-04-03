@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Pressable, PressableProps } from 'react-native'
 import { OverlayContext } from './context'
-import { isWeb } from 'src/utils'
+import { isWeb } from '../utils'
 
 type IOverlayCloseButtonProps = PressableProps;
 
